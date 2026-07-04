@@ -93,16 +93,6 @@
     return "$" + Number(n).toFixed(2);
   }
 
-  function timeAgo(ts) {
-    if (!ts) return "";
-    const s = Math.round((Date.now() - ts) / 1000);
-    if (s < 60) return s + "s ago";
-    const m = Math.round(s / 60);
-    if (m < 60) return m + "m ago";
-    const h = Math.round(m / 60);
-    return h + "h ago";
-  }
-
   // ---------- Yahoo Finance fetch (client-side, with proxy fallbacks) ----------
   async function fetchYahooQuote(symbol) {
     const target = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=1d`;
@@ -259,13 +249,6 @@
     tbody.innerHTML = sorted
       .map((r) => {
         const { pos, eff, itmPct, tier, rollTo, dte } = r;
-        const priceTag =
-          eff.source === "live"
-            ? `<span class="price-live-tag">LIVE ${timeAgo(eff.time)}</span>`
-            : eff.source === "manual"
-            ? `<span class="price-manual-tag">MANUAL</span>`
-            : `<span class="price-stale-tag">NO DATA</span>`;
-
         const itmDisplay = itmPct == null ? "—" : (itmPct > 0 ? "+" : "") + itmPct.toFixed(2) + "%";
 
         const convertBtn =
@@ -282,7 +265,6 @@
             <input type="number" step="0.01" class="price-input" data-action="manual-price" data-id="${pos.id}"
               value="${pos.manualPrice != null ? pos.manualPrice : (priceCache[pos.ticker]?.price ?? "")}"
               placeholder="price">
-            ${priceTag}
           </td>
           <td class="itm-cell" style="color:var(--${tier.key === "otm" ? "text-dim" : tier.key})">
             ${itmDisplay}

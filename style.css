@@ -207,21 +207,6 @@ body {
 .type-pill.call { background: rgba(168,85,247,0.15); color: #cb9bf9; }
 
 .price-cell { font-variant-numeric: tabular-nums; }
-.price-live-tag {
-  font-size: 10px;
-  color: var(--green);
-  margin-left: 6px;
-}
-.price-stale-tag {
-  font-size: 10px;
-  color: var(--amber2);
-  margin-left: 6px;
-}
-.price-manual-tag {
-  font-size: 10px;
-  color: var(--text-dimmer);
-  margin-left: 6px;
-}
 .price-input {
   width: 78px;
   background: var(--panel-alt);
