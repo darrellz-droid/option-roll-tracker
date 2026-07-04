@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Option Roll Tracker</title>
+<link rel="stylesheet" href="style.css">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b0d12">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Option Rolls">
+<meta name="mobile-web-app-capable" content="yes">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-icon">&#8853;</span>
+      <h1>Option Roll Tracker</h1>
+    </div>
+    <div class="topbar-actions">
+      <span id="lastRefreshLabel" class="last-refresh">Never refreshed</span>
+      <button id="refreshBtn" class="btn btn-primary">
+        <span class="btn-icon">&#8635;</span> Refresh Prices
+      </button>
+      <button id="addBtn" class="btn btn-accent">+ Add Position</button>
+    </div>
+  </header>
+
+  <section class="summary-bar" id="summaryBar">
+    <!-- summary tiles injected by JS -->
+  </section>
+
+  <div id="errorBanner" class="error-banner hidden"></div>
+
+  <main class="table-wrap">
+    <table class="positions-table" id="positionsTable">
+      <thead>
+        <tr>
+          <th data-sort="ticker">Ticker</th>
+          <th data-sort="type">Type</th>
+          <th data-sort="strike">Strike</th>
+          <th data-sort="price">Current Price</th>
+          <th data-sort="itm">ITM %</th>
+          <th data-sort="expiration">Expiration</th>
+          <th data-sort="dte">DTE</th>
+          <th>Status / Action</th>
+          <th>Roll To</th>
+          <th>Contracts</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="positionsBody">
+        <!-- rows injected by JS -->
+      </tbody>
+    </table>
+    <div id="emptyState" class="empty-state hidden">
+      <p>No positions yet.</p>
+      <button class="btn btn-accent" id="emptyAddBtn">+ Add your first position</button>
+    </div>
+  </main>
+
+  <footer class="legend">
+    <span class="legend-title">ITM Legend:</span>
+    <span class="chip chip-otm">OTM &mdash; safe</span>
+    <span class="chip chip-green">0&ndash;5% ITM &mdash; no action</span>
+    <span class="chip chip-amber1">5.01&ndash;10% &mdash; roll 1 wk</span>
+    <span class="chip chip-amber2">10.01&ndash;15% &mdash; roll 2 wk</span>
+    <span class="chip chip-red1">15.01&ndash;20% &mdash; roll 3 wk</span>
+    <span class="chip chip-red2">&gt;20% &mdash; roll 4 wk</span>
+  </footer>
+
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay hidden" id="modalOverlay">
+  <div class="modal">
+    <h2 id="modalTitle">Add Position</h2>
+    <form id="positionForm">
+      <input type="hidden" id="positionId">
+
+      <div class="form-row">
+        <label for="fTicker">Ticker</label>
+        <input type="text" id="fTicker" placeholder="e.g. AAPL" required autocomplete="off" style="text-transform:uppercase">
+      </div>
+
+      <div class="form-row">
+        <label>Option Type</label>
+        <div class="segmented" id="typeSegmented">
+          <button type="button" class="seg-btn active" data-value="put">Short Put</button>
+          <button type="button" class="seg-btn" data-value="call">Short Call</button>
+        </div>
+        <input type="hidden" id="fType" value="put">
+      </div>
+
+      <div class="form-grid">
+        <div class="form-row">
+          <label for="fStrike">Strike Price</label>
+          <input type="number" id="fStrike" step="0.01" min="0" required>
+        </div>
+        <div class="form-row">
+          <label for="fContracts">Contracts</label>
+          <input type="number" id="fContracts" step="1" min="1" value="1" required>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-row">
+          <label for="fExpiration">Expiration Date</label>
+          <input type="date" id="fExpiration" required>
+        </div>
+        <div class="form-row">
+          <label for="fPremium">Premium Collected (per share, optional)</label>
+          <input type="number" id="fPremium" step="0.01" min="0">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="fManualPrice">Manual Price Override (optional)</label>
+        <input type="number" id="fManualPrice" step="0.01" min="0" placeholder="Leave blank to use live price">
+      </div>
+
+      <div class="form-row">
+        <label for="fNotes">Notes (optional)</label>
+        <textarea id="fNotes" rows="2" placeholder="e.g. assigned from AAPL 190 put, wheel strategy"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="cancelBtn">Cancel</button>
+        <button type="submit" class="btn btn-accent">Save Position</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
